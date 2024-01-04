@@ -1,0 +1,98 @@
+
+<head>
+    <script src="https://cdn.plot.ly/plotly-2.25.2.min.js" charset="utf-8"></script>
+</head>
+
+<body>
+    <div id='myDiv'>
+    </div>
+</body>
+
+<script>
+
+    // Simulate
+    let freq = 10;
+    let fs = 500;
+    let n_seconds = 2;
+
+    x = [];
+    for (i=0; i<(fs * n_seconds); i++){
+        x.push(i/fs);
+    };
+
+    y = x.map(function(xi) {
+        return Math.sin(xi * (freq * 2 * Math.PI));
+    });
+
+    // Plot
+    var graphDiv = document.getElementById('myDiv');
+
+    Plotly.newPlot(graphDiv, [
+        // Signal
+        {
+            mode: 'lines',
+            x: x,
+            y: y,
+            xaxis: 'x',
+            yaxis: 'y',
+            name: 'Signal',
+            line: {
+                color: 'black'
+            }
+        },
+        // Burst
+        {
+            mode: 'lines',
+            x: [],
+            y: [],
+            xaxis: 'x',
+            yaxis: 'y',
+            name: 'Burst',
+            line: {
+                color: 'red'
+            }
+        },
+    ],
+        // Layout
+        {
+            title: 'Select Burst',
+            dragmode: 'select',
+            selectdirection: "h",
+            xaxis: {
+                zeroline: false,
+            },
+            yaxis: {
+                domain: [0.55, 1],
+            },
+            showlegend: true
+        }
+    );
+
+    // Selection callback
+    graphDiv.on('plotly_selected', function(eventData) {
+
+        let xselect = [eventData.range.x[0], eventData.range.x[1]];
+        let xburst = [];
+        let yburst = [];
+
+        for (xi=0; xi<x.length; xi++){
+            if (x[xi] >= xselect[0] && x[xi] <= xselect[1]){
+                xburst.push(x[xi]);
+                yburst.push(y[xi]);
+            }
+        };
+
+        graphDiv.data[1]['x'] = xburst;
+        graphDiv.data[1]['y'] = yburst;
+
+        // Replot bursts
+        var replot = () => {
+            setTimeout(() => {
+            Plotly.redraw(graphDiv, [1]);
+        }, 200);
+        }
+
+        replot();
+
+    });
+</script>
