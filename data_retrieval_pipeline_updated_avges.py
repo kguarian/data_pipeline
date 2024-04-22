@@ -527,7 +527,9 @@ dualthresh_selections = dualthresh_selections_by_signal(sig_array, params)
 bycylerecon_selections = bycyclerecon_selections_by_signal(sig_array, params)
 
 # print(out_sel)
-algo_ft_pn = ft_pn(ground_truth, dualthresh_selections)
+# algo_ft_pn = ft_pn(ground_truth, dualthresh_selections)
+algo_ft_pn = ft_pn(ground_truth, bycylerecon_selections)
+
 human_ft_pn = ft_pn(ground_truth, selection_dict)
 # algo_mean_squares = mean_squares_by_signal(algo_ft_pn[0], algo_ft_pn[1], algo_ft_pn[2], algo_ft_pn[3])
 # human_mean_squares = mean_squares_by_signal(human_ft_pn[0], human_ft_pn[1], human_ft_pn[2], human_ft_pn[3])
